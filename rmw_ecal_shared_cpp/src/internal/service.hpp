@@ -178,6 +178,13 @@ namespace eCAL
                                    std::bind(&Service::OnPingRequest, this, _1, _2, _3, _4, _5));
       }
 
+      ~Service()
+      {
+        service_.RemMethodCallback(type_support_->GetServiceSimpleName());
+        service_.RemMethodCallback("_Ping" + type_support_->GetServiceSimpleName());
+        service_.Destroy();
+      }
+
       bool HasRequest() const
       {
         std::lock_guard<std::mutex> lock(pending_requests_mutex_);

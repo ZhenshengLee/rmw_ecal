@@ -1,4 +1,4 @@
-// Copyright 2026 Continental AG
+// Copyright 2020 Continental AG
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#pragma once
+
 #if ROS_DISTRO >= HUMBLE
-#include <rmw_ecal_shared_cpp/rmw/rmw_stubs.hpp>
+
+#include <rmw/features.h>
+#include <rmw_ecal_shared_cpp/rmw/rmw.hpp>
+
 #endif

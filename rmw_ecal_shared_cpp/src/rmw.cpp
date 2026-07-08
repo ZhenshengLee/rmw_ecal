@@ -91,7 +91,7 @@ namespace eCAL
 
     rmw_ret_t rmw_node_assert_liveliness(const char * /* implementation_identifier */, const rmw_node_t * /* node */)
     {
-      UNSUPPORTED;
+      return RMW_RET_OK;
     }
 
     const rmw_guard_condition_t *rmw_node_get_graph_guard_condition(const char *implementation_identifier, const rmw_node_t *node)
@@ -993,7 +993,7 @@ namespace eCAL
     rmw_ret_t rmw_publisher_assert_liveliness(const char * /* implementation_identifier */,
                                               const rmw_publisher_t * /* publisher */)
     {
-      UNSUPPORTED;
+      return RMW_RET_OK;
     }
 
     rmw_ret_t rmw_init_subscription_allocation(const char * /* implementation_identifier */,
@@ -1066,58 +1066,82 @@ namespace eCAL
     }
 
 // required functions for HUMBLE
-#if ROS_DISTRO == HUMBLE
+#if ROS_DISTRO >= HUMBLE
 
     bool rmw_feature_supported(rmw_feature_t feature)
     {
+        (void)feature;
         UNSUPPORTED; // ?
     }
 
     rmw_ret_t rmw_subscription_set_content_filter(rmw_subscription_t * subscription, const rmw_subscription_content_filter_options_t * options)
     {
+      (void)subscription;
+      (void)options;
       UNSUPPORTED; // OK
     }
 
     rmw_ret_t rmw_subscription_get_content_filter(const rmw_subscription_t * subscription, rcutils_allocator_t * allocator, rmw_subscription_content_filter_options_t * options)
     {
+      (void)subscription;
+      (void)allocator;
+      (void)options;
       UNSUPPORTED; // OK
     }
 
     rmw_ret_t rmw_subscription_get_actual_qos(const rmw_subscription_t * subscription, rmw_qos_profile_t * qos)
     {
+      (void)subscription;
+      (void)qos;
       //TODO
       return RMW_RET_OK;
     }
 
     rmw_ret_t rmw_client_request_publisher_get_actual_qos(const rmw_client_t * client, rmw_qos_profile_t * qos)
     {
+      (void)client;
+      (void)qos;
       // TODO
       return RMW_RET_OK;
     }
 
    rmw_ret_t rmw_client_response_subscription_get_actual_qos(const rmw_client_t * client, rmw_qos_profile_t * qos)
    {
+      (void)client;
+      (void)qos;
       UNSUPPORTED; // TODO
    }
 
    rmw_ret_t rmw_client_set_on_new_response_callback(rmw_client_t * rmw_client, rmw_event_callback_t callback, const void * user_data)
    {
+      (void)rmw_client;
+      (void)callback;
+      (void)user_data;
       UNSUPPORTED; // OK
    }
 
    rmw_ret_t rmw_service_set_on_new_request_callback(rmw_service_t * rmw_service, rmw_event_callback_t callback, const void * user_data)
    {
+      (void)rmw_service;
+      (void)callback;
+      (void)user_data;
       UNSUPPORTED; // OK
    }
 
     rmw_ret_t rmw_subscription_set_on_new_message_callback(rmw_subscription_t * subscription, rmw_event_callback_t callback, const void * user_data)
     {
+      (void)subscription;
+      (void)callback;
+      (void)user_data;
           UNSUPPORTED; // OK
     }
 
 
     rmw_ret_t rmw_event_set_callback(rmw_event_t * rmw_event, rmw_event_callback_t callback, const void * user_data)
     {
+      (void)rmw_event;
+      (void)callback;
+      (void)user_data;
       UNSUPPORTED; // OK
     }
 
@@ -1142,6 +1166,8 @@ namespace eCAL
     }
 
     rmw_ret_t rmw_service_response_publisher_get_actual_qos(const rmw_service_t * service, rmw_qos_profile_t * qos){
+       (void)service;
+       (void)qos;
        // TODO
 
        return RMW_RET_OK;

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <rcutils/error_handling.h>
 #include <rosidl_typesupport_introspection_cpp/message_introspection.hpp>
 #include <rosidl_typesupport_introspection_c/message_introspection.h>
 #include <rosidl_typesupport_introspection_cpp/identifier.hpp>
@@ -38,6 +39,7 @@ namespace eCAL
         auto members = GetCppMembers(ts);
         return CreateSerializer(members);
       }
+      rcutils_reset_error();
 
       ts = get_message_typesupport_handle(type_support, rosidl_typesupport_introspection_c__identifier);
       if (ts != nullptr)
@@ -45,6 +47,7 @@ namespace eCAL
         auto members = GetCMembers(ts);
         return CreateSerializer(members);
       }
+      rcutils_reset_error();
       throw std::runtime_error("Unsupported type support.");
     }
 
@@ -56,6 +59,7 @@ namespace eCAL
         auto members = GetCppMembers(ts);
         return CreateDeserializer(members);
       }
+      rcutils_reset_error();
 
       ts = get_message_typesupport_handle(type_support, rosidl_typesupport_introspection_c__identifier);
       if (ts != nullptr)
@@ -63,6 +67,7 @@ namespace eCAL
         auto members = GetCMembers(ts);
         return CreateDeserializer(members);
       }
+      rcutils_reset_error();
       throw std::runtime_error("Unsupported type support.");
     }
 

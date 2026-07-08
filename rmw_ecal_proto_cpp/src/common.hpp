@@ -14,13 +14,12 @@
 
 #pragma once
 
-#include <stdexcept>
-
-#include <rosidl_typesupport_protobuf/service_type_support.hpp>
+#include <rcutils/error_handling.h>
 #include <rosidl_typesupport_protobuf/message_type_support.hpp>
 #include <rosidl_typesupport_protobuf/service_type_support.hpp>
 #include <rosidl_typesupport_protobuf_c/identifier.hpp>
 #include <rosidl_typesupport_protobuf_cpp/identifier.hpp>
+#include <rmw_ecal_shared_cpp/serialization/common.hpp>
 
 inline const rosidl_typesupport_protobuf::message_type_support_t *GetTypeSupport(const rosidl_message_type_support_t *type_support)
 {
@@ -29,13 +28,15 @@ inline const rosidl_typesupport_protobuf::message_type_support_t *GetTypeSupport
   {
     return static_cast<const rosidl_typesupport_protobuf::message_type_support_t *>(ts->data);
   }
+  rcutils_reset_error();
 
   ts = get_message_typesupport_handle(type_support, rosidl_typesupport_protobuf_c::identifier);
   if (ts != nullptr)
   {
     return static_cast<const rosidl_typesupport_protobuf::message_type_support_t *>(ts->data);
   }
-  throw std::runtime_error{"Unsupported type support."};
+  rcutils_reset_error();
+  return nullptr;
 }
 
 inline const rosidl_typesupport_protobuf::service_type_support_t *GetTypeSupport(const rosidl_service_type_support_t *type_support)
@@ -45,11 +46,16 @@ inline const rosidl_typesupport_protobuf::service_type_support_t *GetTypeSupport
   {
     return static_cast<const rosidl_typesupport_protobuf::service_type_support_t *>(ts->data);
   }
+  rcutils_reset_error();
 
   ts = get_service_typesupport_handle(type_support, rosidl_typesupport_protobuf_c::identifier);
   if (ts != nullptr)
   {
     return static_cast<const rosidl_typesupport_protobuf::service_type_support_t *>(ts->data);
   }
-  throw std::runtime_error{"Unsupported type support."};
+  rcutils_reset_error();
+  return nullptr;
 }
+
+
+

@@ -5,9 +5,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,21 +48,17 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME} SHARED
-	src/rmw/event.cpp
-	src/rmw/get_network_flow_endpoints.cpp
-	src/rmw/get_node_info_and_types.cpp
-	src/rmw/get_service_names_and_types.cpp
-	src/rmw/get_topic_names_and_types.cpp
-	src/rmw/get_topic_endpoint_info.cpp
-	src/rmw/init_options.cpp
-	src/rmw/init.cpp
-	src/rmw/qos_profiles.cpp
-	src/rmw/rmw.cpp
-	src/rmw/features.cpp
-	src/serialization/serializer_cpp.cpp
-	src/serialization/serializer_c.cpp
-	src/serialization/deserializer_cpp.cpp
-	src/serialization/deserializer_c.cpp
+  src/rmw/event.cpp
+  src/rmw/get_network_flow_endpoints.cpp
+  src/rmw/get_node_info_and_types.cpp
+  src/rmw/get_service_names_and_types.cpp
+  src/rmw/get_topic_names_and_types.cpp
+  src/rmw/get_topic_endpoint_info.cpp
+  src/rmw/init_options.cpp
+  src/rmw/init.cpp
+  src/rmw/qos_profiles.cpp
+  src/rmw/rmw.cpp
+  src/rmw/features.cpp
 )
 
 ament_export_dependencies(rmw)
@@ -71,21 +67,32 @@ ament_export_dependencies(rosidl_generator_c)
 ament_export_dependencies(rosidl_typesupport_introspection_c)
 ament_export_dependencies(rosidl_typesupport_introspection_cpp)
 
-ament_target_dependencies(${PROJECT_NAME} 
-	rmw 
-	rmw_ecal_shared_cpp
-	rosidl_typesupport_introspection_cpp
+target_include_directories(${PROJECT_NAME} PUBLIC
+  ${rmw_INCLUDE_DIRS}
+  ${rmw_ecal_shared_cpp_INCLUDE_DIRS}
+  ${rosidl_generator_c_INCLUDE_DIRS}
+  ${rosidl_typesupport_introspection_c_INCLUDE_DIRS}
+  ${rosidl_typesupport_introspection_cpp_INCLUDE_DIRS}
 )
 
-target_link_libraries(${PROJECT_NAME} 
-	eCAL::core
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  eCAL::core
+  rmw::rmw
+  ${rmw_ecal_shared_cpp_LIBRARIES}
+  ${rmw_ecal_shared_cpp_TARGETS}
+  ${rosidl_generator_c_LIBRARIES}
+  ${rosidl_generator_c_TARGETS}
+  ${rosidl_typesupport_introspection_c_LIBRARIES}
+  ${rosidl_typesupport_introspection_c_TARGETS}
+  ${rosidl_typesupport_introspection_cpp_LIBRARIES}
+  ${rosidl_typesupport_introspection_cpp_TARGETS}
 )
 
 configure_rmw_library(${PROJECT_NAME})
 
 register_rmw_implementation(
-	"c:rosidl_typesupport_c:rosidl_typesupport_introspection_c"
-	"cpp:rosidl_typesupport_cpp:rosidl_typesupport_introspection_cpp"
+  "c:rosidl_typesupport_c:rosidl_typesupport_introspection_c"
+  "cpp:rosidl_typesupport_cpp:rosidl_typesupport_introspection_cpp"
 )
 
 ament_export_libraries(${PROJECT_NAME})

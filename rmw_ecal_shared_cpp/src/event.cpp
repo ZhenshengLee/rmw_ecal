@@ -32,14 +32,32 @@ namespace eCAL
       RMW_CHECK_ARGUMENT_FOR_NULL(publisher, RMW_RET_INVALID_ARGUMENT);
       CHECK_RMW_IMPLEMENTATION(implementation_identifier, publisher);
 
-      if (event_type != rmw_event_type_t::RMW_EVENT_OFFERED_DEADLINE_MISSED)
+      auto *impl = GetImplementation(publisher);
+      Event *event_listener = nullptr;
+      switch (event_type)
       {
+      case rmw_event_type_t::RMW_EVENT_OFFERED_DEADLINE_MISSED:
+        event_listener = &impl->GetDataDroppedEventListener();
+        break;
+      case rmw_event_type_t::RMW_EVENT_OFFERED_QOS_INCOMPATIBLE:
+        event_listener = &impl->GetQosIncompatibleEventListener();
+        break;
+      case rmw_event_type_t::RMW_EVENT_PUBLISHER_INCOMPATIBLE_TYPE:
+        event_listener = &impl->GetIncompatibleTypeEventListener();
+        break;
+      case rmw_event_type_t::RMW_EVENT_PUBLICATION_MATCHED:
+        event_listener = &impl->GetMatchedEventListener();
+        break;
+      case rmw_event_type_t::RMW_EVENT_LIVELINESS_LOST:
+        event_listener = &impl->GetLivelinessLostEventListener();
+        break;
+      default:
         return RMW_RET_UNSUPPORTED;
       }
 
       rmw_event->event_type = event_type;
       rmw_event->implementation_identifier = implementation_identifier;
-      rmw_event->data = &GetImplementation(publisher)->GetDataDroppedEventListener();
+      rmw_event->data = event_listener;
 
       return RMW_RET_OK;
     }
@@ -53,14 +71,35 @@ namespace eCAL
       RMW_CHECK_ARGUMENT_FOR_NULL(subscription, RMW_RET_INVALID_ARGUMENT);
       CHECK_RMW_IMPLEMENTATION(implementation_identifier, subscription);
 
-      if (event_type != rmw_event_type_t::RMW_EVENT_REQUESTED_DEADLINE_MISSED)
+      auto *impl = GetImplementation(subscription);
+      Event *event_listener = nullptr;
+      switch (event_type)
       {
+      case rmw_event_type_t::RMW_EVENT_REQUESTED_DEADLINE_MISSED:
+        event_listener = &impl->GetDataDroppedEventListener();
+        break;
+      case rmw_event_type_t::RMW_EVENT_REQUESTED_QOS_INCOMPATIBLE:
+        event_listener = &impl->GetQosIncompatibleEventListener();
+        break;
+      case rmw_event_type_t::RMW_EVENT_SUBSCRIPTION_INCOMPATIBLE_TYPE:
+        event_listener = &impl->GetIncompatibleTypeEventListener();
+        break;
+      case rmw_event_type_t::RMW_EVENT_SUBSCRIPTION_MATCHED:
+        event_listener = &impl->GetMatchedEventListener();
+        break;
+      case rmw_event_type_t::RMW_EVENT_LIVELINESS_CHANGED:
+        event_listener = &impl->GetLivelinessChangedEventListener();
+        break;
+      case rmw_event_type_t::RMW_EVENT_MESSAGE_LOST:
+        event_listener = &impl->GetMessageLostEventListener();
+        break;
+      default:
         return RMW_RET_UNSUPPORTED;
       }
 
       rmw_event->event_type = event_type;
       rmw_event->implementation_identifier = implementation_identifier;
-      rmw_event->data = &GetImplementation(subscription)->GetDataDroppedEventListener();
+      rmw_event->data = event_listener;
 
       return RMW_RET_OK;
     }

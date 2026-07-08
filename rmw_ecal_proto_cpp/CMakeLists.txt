@@ -5,9 +5,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,8 +29,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	add_compile_options(/W4)
-	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+  add_compile_options(/W4)
+  add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
   # CMake >= 3.15 will erroneously define PROTOBUF_USE_DLLS otherwise
   set (Protobuf_USE_STATIC_LIBS TRUE)
 endif()
@@ -50,34 +50,53 @@ find_package(rosidl_typesupport_protobuf_c REQUIRED)
 find_package(rosidl_typesupport_protobuf_cpp REQUIRED)
 
 include_directories(
-	${PROJECT_SOURCE_DIR}/src
+  ${PROJECT_SOURCE_DIR}/src
+  ${PROJECT_SOURCE_DIR}/../rmw_ecal_dynamic_cpp/src
 )
 
 add_library(${PROJECT_NAME} SHARED
   src/rmw/event.cpp
-	src/rmw/get_network_flow_endpoints.cpp
-	src/rmw/get_node_info_and_types.cpp
-	src/rmw/get_service_names_and_types.cpp
-	src/rmw/get_topic_names_and_types.cpp
-	src/rmw/get_topic_endpoint_info.cpp
-	src/rmw/init_options.cpp
-	src/rmw/init.cpp
-	src/rmw/qos_profiles.cpp
-	src/rmw/rmw.cpp
-	src/rmw/features.cpp
+  src/rmw/get_network_flow_endpoints.cpp
+  src/rmw/get_node_info_and_types.cpp
+  src/rmw/get_service_names_and_types.cpp
+  src/rmw/get_topic_names_and_types.cpp
+  src/rmw/get_topic_endpoint_info.cpp
+  src/rmw/init_options.cpp
+  src/rmw/init.cpp
+  src/rmw/qos_profiles.cpp
+  src/rmw/rmw.cpp
+  src/rmw/features.cpp
 )
 
-target_link_libraries(${PROJECT_NAME} 
-	eCAL::core eCAL::pb
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+  ${rmw_INCLUDE_DIRS}
+  ${rmw_ecal_shared_cpp_INCLUDE_DIRS}
+  ${rosidl_generator_c_INCLUDE_DIRS}
+  ${rosidl_typesupport_introspection_c_INCLUDE_DIRS}
+  ${rosidl_typesupport_introspection_cpp_INCLUDE_DIRS}
+  ${rosidl_typesupport_protobuf_INCLUDE_DIRS}
+  ${rosidl_typesupport_protobuf_c_INCLUDE_DIRS}
+  ${rosidl_typesupport_protobuf_cpp_INCLUDE_DIRS}
 )
 
-ament_target_dependencies(${PROJECT_NAME} 
-	rmw
-	rmw_ecal_shared_cpp
-	rosidl_generator_c
-	rosidl_typesupport_protobuf
-	rosidl_typesupport_protobuf_c
-	rosidl_typesupport_protobuf_cpp
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  eCAL::core eCAL::pb
+  rmw::rmw
+  ${rmw_ecal_shared_cpp_LIBRARIES}
+  ${rmw_ecal_shared_cpp_TARGETS}
+  ${rosidl_generator_c_LIBRARIES}
+  ${rosidl_generator_c_TARGETS}
+  ${rosidl_typesupport_introspection_c_LIBRARIES}
+  ${rosidl_typesupport_introspection_c_TARGETS}
+  ${rosidl_typesupport_introspection_cpp_LIBRARIES}
+  ${rosidl_typesupport_introspection_cpp_TARGETS}
+  ${rosidl_typesupport_protobuf_LIBRARIES}
+  ${rosidl_typesupport_protobuf_TARGETS}
+  ${rosidl_typesupport_protobuf_c_LIBRARIES}
+  ${rosidl_typesupport_protobuf_c_TARGETS}
+  ${rosidl_typesupport_protobuf_cpp_LIBRARIES}
+  ${rosidl_typesupport_protobuf_cpp_TARGETS}
 )
 
 configure_rmw_library(${PROJECT_NAME})
@@ -95,15 +114,15 @@ ament_export_dependencies(rosidl_typesupport_protobuf_c)
 ament_export_dependencies(rosidl_typesupport_protobuf_cpp)
 
 install(
-	TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
-	ARCHIVE DESTINATION lib
-	LIBRARY DESTINATION lib
-	RUNTIME DESTINATION bin
+  TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
 )
 
 register_rmw_implementation(
-	"c:rosidl_typesupport_c:rosidl_typesupport_protobuf_c"
-	"cpp:rosidl_typesupport_cpp:rosidl_typesupport_protobuf_cpp"
+  "c:rosidl_typesupport_c:rosidl_typesupport_protobuf_c"
+  "cpp:rosidl_typesupport_cpp:rosidl_typesupport_protobuf_cpp"
 )
 
 ament_package()

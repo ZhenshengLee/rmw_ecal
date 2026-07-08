@@ -107,7 +107,7 @@ namespace eCAL
 
     inline Event *GetImplementation(const rmw_events_t *events, size_t index)
     {
-      return static_cast<Event *>(events->events[index]);
+      return static_cast<Event *>(static_cast<rmw_event_t *>(events->events[index])->data);
     }
 
     inline sequence_number_t GenerateSequenceNumber()

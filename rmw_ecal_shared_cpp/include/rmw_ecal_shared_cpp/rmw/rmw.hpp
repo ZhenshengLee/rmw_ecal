@@ -14,7 +14,7 @@
 
 #include <rmw/rmw.h>
 
-#if ROS_DISTRO == HUMBLE
+#if ROS_DISTRO >= HUMBLE
     #include "rmw/features.h"
 #endif
 
@@ -315,7 +315,7 @@ namespace eCAL
 
 
  // required functions for HUMBLE
-#if ROS_DISTRO == HUMBLE
+#if ROS_DISTRO >= HUMBLE
         RMW_PROTOBUF_SHARED_CPP_PUBLIC
         bool rmw_feature_supported(rmw_feature_t feature);
 

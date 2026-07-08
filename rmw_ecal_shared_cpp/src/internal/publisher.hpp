@@ -36,6 +36,10 @@ namespace eCAL
       eCAL::CPublisher publisher_;
       rmw_qos_profile_t ros_qos_profile_;
       Event data_dropped_event_;
+      Event qos_incompatible_event_;
+      Event incompatible_type_event_;
+      Event matched_event_;
+      Event liveliness_lost_event_;
 
       void OnDataDropped(const char * /* topic_name */, const eCAL::SPubEventCallbackData * /* data */)
       {
@@ -93,6 +97,26 @@ namespace eCAL
       Event &GetDataDroppedEventListener()
       {
         return data_dropped_event_;
+      }
+
+      Event &GetQosIncompatibleEventListener()
+      {
+        return qos_incompatible_event_;
+      }
+
+      Event &GetIncompatibleTypeEventListener()
+      {
+        return incompatible_type_event_;
+      }
+
+      Event &GetMatchedEventListener()
+      {
+        return matched_event_;
+      }
+
+      Event &GetLivelinessLostEventListener()
+      {
+        return liveliness_lost_event_;
       }
 
       void UnregisterEvent(Event * /*event*/)

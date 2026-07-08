@@ -1,10 +1,3 @@
-#if DISTRO >= HUMBLE
-
-#include <rmw/features.h>
-
-bool rmw_feature_supported(rmw_feature_t feature)
-{
-  return false;
-}
-
+// Disabled as it is defined in rmw.cpp
+#if 0
 #endif

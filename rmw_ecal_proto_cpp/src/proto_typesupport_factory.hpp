@@ -19,6 +19,8 @@
 
 #include "common.hpp"
 
+#include "../../rmw_ecal_dynamic_cpp/src/custom_typesupport_factory.hpp"
+
 namespace eCAL
 {
   namespace rmw
@@ -27,14 +29,26 @@ namespace eCAL
     {
       MessageTypeSupport *Create(const rosidl_message_type_support_t *type_support) const override
       {
-        return new ProtoMessageTypeSupport{GetTypeSupport(type_support)};
+        auto *proto_ts = GetTypeSupport(type_support);
+        if (proto_ts != nullptr)
+        {
+          return new ProtoMessageTypeSupport{proto_ts};
+        }
+        return CustomTypeSupportFactory{}.Create(type_support);
       }
 
       ServiceTypeSupport *Create(const rosidl_service_type_support_t *type_support) const override
       {
-        return new ProtoServiceTypeSupport{GetTypeSupport(type_support)};
+        auto *proto_ts = GetTypeSupport(type_support);
+        if (proto_ts != nullptr)
+        {
+          return new ProtoServiceTypeSupport{proto_ts};
+        }
+        return CustomTypeSupportFactory{}.Create(type_support);
       }
     };
+
+
 
   } // namespace rmw
 } // namespace eCAL

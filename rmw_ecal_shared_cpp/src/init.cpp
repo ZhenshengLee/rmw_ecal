@@ -56,10 +56,6 @@ namespace eCAL
       RMW_CHECK_ARGUMENT_FOR_NULL(context, RMW_RET_INVALID_ARGUMENT);
       CHECK_RMW_IMPLEMENTATION(implementation_identifier, context);
 
-      int status = eCAL::Finalize();
-      if (status == -1)
-        return RMW_RET_ERROR;
-
       return RMW_RET_OK;
     }
 
@@ -67,6 +63,10 @@ namespace eCAL
     {
       RMW_CHECK_ARGUMENT_FOR_NULL(context, RMW_RET_INVALID_ARGUMENT);
       CHECK_RMW_IMPLEMENTATION(implementation_identifier, context);
+
+      int status = eCAL::Finalize();
+      if (status == -1)
+        return RMW_RET_ERROR;
 
       *context = ::rmw_get_zero_initialized_context();
 

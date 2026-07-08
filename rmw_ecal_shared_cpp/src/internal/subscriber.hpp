@@ -72,6 +72,11 @@ namespace eCAL
 
       WaitSet *wait_set_ = nullptr;
       Event data_dropped_event_;
+      Event qos_incompatible_event_;
+      Event incompatible_type_event_;
+      Event matched_event_;
+      Event liveliness_changed_event_;
+      Event message_lost_event_;
 
       std::queue<Data> data_;
 
@@ -204,6 +209,31 @@ namespace eCAL
       Event &GetDataDroppedEventListener()
       {
         return data_dropped_event_;
+      }
+
+      Event &GetQosIncompatibleEventListener()
+      {
+        return qos_incompatible_event_;
+      }
+
+      Event &GetIncompatibleTypeEventListener()
+      {
+        return incompatible_type_event_;
+      }
+
+      Event &GetMatchedEventListener()
+      {
+        return matched_event_;
+      }
+
+      Event &GetLivelinessChangedEventListener()
+      {
+        return liveliness_changed_event_;
+      }
+
+      Event &GetMessageLostEventListener()
+      {
+        return message_lost_event_;
       }
 
       void AttachWaitSet(WaitSet *wait_set)

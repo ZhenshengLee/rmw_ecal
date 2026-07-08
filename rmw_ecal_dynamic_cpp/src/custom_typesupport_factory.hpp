@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <rcutils/error_handling.h>
 #include <rosidl_typesupport_introspection_cpp/message_introspection.hpp>
 #include <rosidl_typesupport_introspection_c/message_introspection.h>
 #include <rosidl_typesupport_introspection_cpp/identifier.hpp>
@@ -30,19 +31,23 @@ namespace eCAL
   {
     class CustomTypeSupportFactory : public TypesupportFactory
     {
+    public:
       MessageTypeSupport *Create(const rosidl_message_type_support_t *type_support) const override
+
       {
         auto ts = get_message_typesupport_handle(type_support, rosidl_typesupport_introspection_cpp::typesupport_identifier);
         if (ts != nullptr)
         {
           return new CppMessageTypeSupport(ts);
         }
+        rcutils_reset_error();
 
         ts = get_message_typesupport_handle(type_support, rosidl_typesupport_introspection_c__identifier);
         if (ts != nullptr)
         {
           return new CMessageTypeSupport(ts);
         }
+        rcutils_reset_error();
 
         throw std::runtime_error("Unsupported type support.");
       }
@@ -54,12 +59,14 @@ namespace eCAL
         {
           return new CppServiceTypeSupport(ts);
         }
+        rcutils_reset_error();
 
         ts = get_service_typesupport_handle(type_support, rosidl_typesupport_introspection_c__identifier);
         if (ts != nullptr)
         {
           return new CServiceTypeSupport(ts);
         }
+        rcutils_reset_error();
         throw std::runtime_error("Unsupported type support.");
       }
     };
