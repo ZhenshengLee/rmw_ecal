@@ -380,7 +380,13 @@ namespace eCAL
       auto ecal_sub = GetImplementation(subscription);
       while (ecal_sub->HasData() && *taken != count)
       {
-        ecal_sub->TakeLatestData(message_sequence->data[*taken]);
+        auto ecal_msg_info = ecal_sub->TakeLatestDataWithInfo(message_sequence->data[*taken]);
+        std::chrono::microseconds src_ts_ms{ecal_msg_info.send_timestamp};
+        std::chrono::microseconds rcv_ts_ms{ecal_msg_info.receive_timestamp};
+        message_info_sequence->data[*taken].source_timestamp =
+          std::chrono::duration_cast<std::chrono::nanoseconds>(src_ts_ms).count();
+        message_info_sequence->data[*taken].received_timestamp =
+          std::chrono::duration_cast<std::chrono::nanoseconds>(rcv_ts_ms).count();
         (*taken)++;
       }
 
@@ -415,10 +421,34 @@ namespace eCAL
                                                     const rmw_subscription_t *subscription,
                                                     rmw_serialized_message_t *serialized_message,
                                                     bool *taken,
-                                                    rmw_message_info_t * /* message_info */,
-                                                    rmw_subscription_allocation_t *allocation)
+                                                    rmw_message_info_t *message_info,
+                                                    rmw_subscription_allocation_t * /* allocation */)
     {
-      return rmw_take_serialized_message(implementation_identifier, subscription, serialized_message, taken, allocation);
+      RMW_CHECK_ARGUMENT_FOR_NULL(subscription, RMW_RET_INVALID_ARGUMENT);
+      RMW_CHECK_ARGUMENT_FOR_NULL(serialized_message, RMW_RET_INVALID_ARGUMENT);
+      RMW_CHECK_ARGUMENT_FOR_NULL(taken, RMW_RET_INVALID_ARGUMENT);
+      CHECK_RMW_IMPLEMENTATION(implementation_identifier, subscription);
+
+      auto ecal_sub = GetImplementation(subscription);
+      if (!ecal_sub->HasData())
+        return RMW_RET_OK;
+
+      auto data = ecal_sub->TakeLatestSerializedData();
+      serialized_message->buffer = reinterpret_cast<uint8_t *>(data.data);
+      serialized_message->buffer_length = data.size;
+      serialized_message->buffer_capacity = data.size;
+      if (message_info)
+      {
+        std::chrono::microseconds src_ts_ms{data.info.send_timestamp};
+        std::chrono::microseconds rcv_ts_ms{data.info.receive_timestamp};
+        message_info->source_timestamp =
+          std::chrono::duration_cast<std::chrono::nanoseconds>(src_ts_ms).count();
+        message_info->received_timestamp =
+          std::chrono::duration_cast<std::chrono::nanoseconds>(rcv_ts_ms).count();
+      }
+      *taken = true;
+
+      return RMW_RET_OK;
     }
 
     rmw_client_t *rmw_create_client(const char *implementation_identifier,
