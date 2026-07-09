@@ -20,5 +20,5 @@ TEST(TestSerializationFormatDynamicCpp, CheckSerializationFormatSpecific)
 {
   const char * format = rmw_get_serialization_format();
   ASSERT_NE(format, nullptr);
-  EXPECT_STREQ(format, "custom");
+  EXPECT_STREQ(format, "cdr");
 }

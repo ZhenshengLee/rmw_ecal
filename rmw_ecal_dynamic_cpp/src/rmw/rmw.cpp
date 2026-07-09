@@ -20,7 +20,7 @@
 #include "custom_serializer_factory.hpp"
 
 const auto identifier{"rmw_ecal_dynamic_cpp"};
-const auto serialization_format{"custom"};
+const auto serialization_format{"cdr"};
 
 const char *rmw_get_implementation_identifier(void)
 {
