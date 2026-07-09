@@ -104,4 +104,9 @@ install(
   RUNTIME DESTINATION bin
 )
 
+if(BUILD_TESTING)
+  add_subdirectory(test)
+endif()
+
 ament_package()
+

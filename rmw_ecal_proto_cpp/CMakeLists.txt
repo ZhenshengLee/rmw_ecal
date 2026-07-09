@@ -125,4 +125,9 @@ register_rmw_implementation(
   "cpp:rosidl_typesupport_cpp:rosidl_typesupport_protobuf_cpp"
 )
 
+if(BUILD_TESTING)
+  add_subdirectory(test)
+endif()
+
 ament_package()
+

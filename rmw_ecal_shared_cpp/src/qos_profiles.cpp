@@ -32,6 +32,10 @@ namespace eCAL
                                                char *reason,
                                                size_t reason_size)
     {
+      if (compatibility == nullptr)
+      {
+        return RMW_RET_INVALID_ARGUMENT;
+      }
       *compatibility = RMW_QOS_COMPATIBILITY_OK;
 
       if (publisher_profile.avoid_ros_namespace_conventions != subscription_profile.avoid_ros_namespace_conventions)

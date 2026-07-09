@@ -131,4 +131,9 @@ install(
   RUNTIME DESTINATION bin
 )
 
+if(BUILD_TESTING)
+  add_subdirectory(test)
+endif()
+
 ament_package(CONFIG_EXTRAS "cmake/discover-ros-distro-extras.cmake")
+
