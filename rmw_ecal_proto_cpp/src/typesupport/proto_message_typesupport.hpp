@@ -49,7 +49,7 @@ namespace eCAL
 
       virtual const std::string GetMessageName() const override
       {
-        return "proto:" + GetMessageNamespace() + "/" + GetMessageSimpleName();
+        return GetMessageNamespace() + "/" + GetMessageSimpleName();
       }
 
       virtual size_t GetTypeSize() const override
