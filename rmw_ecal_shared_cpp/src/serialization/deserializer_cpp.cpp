@@ -52,9 +52,14 @@ namespace eCAL
 
       auto arr_size = DeserializeArraySize(serialized_data);
 
-      if (arr_size > 0)
+      str->clear();
+      if (arr_size > 1)
       {
-        str->append(*serialized_data, arr_size);
+        str->assign(*serialized_data, arr_size - 1);
+        *serialized_data += arr_size;
+      }
+      else if (arr_size == 1)
+      {
         *serialized_data += arr_size;
       }
     }
@@ -278,10 +283,14 @@ namespace eCAL
       }
     }
 
-    void CppDeserializer::Deserialize(void *message, const void *serialized_data, size_t /* size */)
+    void CppDeserializer::Deserialize(void *message, const void *serialized_data, size_t size)
     {
       auto serialized_bytes = static_cast<const char *>(serialized_data);
       auto message_bytes = static_cast<char *>(message);
+      if (size >= 4 && serialized_bytes[0] == 0x00 && serialized_bytes[1] == 0x01 && serialized_bytes[2] == 0x00 && serialized_bytes[3] == 0x00)
+      {
+        serialized_bytes += 4;
+      }
       DeserializeMessage(&serialized_bytes, members_, message_bytes);
     }
 

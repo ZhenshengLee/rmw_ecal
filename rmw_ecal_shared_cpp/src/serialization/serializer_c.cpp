@@ -273,6 +273,10 @@ namespace eCAL
     const std::string CSerializer::Serialize(const void *data)
     {
       std::string serialized_data;
+      serialized_data.push_back(0x00);
+      serialized_data.push_back(0x01);
+      serialized_data.push_back(0x00);
+      serialized_data.push_back(0x00);
       SerializeMessage(static_cast<const char *>(data), members_, serialized_data);
       return serialized_data;
     }

@@ -49,7 +49,14 @@ namespace eCAL
 
       auto sequence = reinterpret_cast<rosidl_runtime_c__String *>(member);
       rosidl_runtime_c__String__init(sequence);
-      rosidl_runtime_c__String__assignn(sequence, *serialized_data, size);
+      if (size > 1)
+      {
+        rosidl_runtime_c__String__assignn(sequence, *serialized_data, size - 1);
+      }
+      else
+      {
+        rosidl_runtime_c__String__assign(sequence, "");
+      }
 
       *serialized_data += size;
     }
@@ -283,10 +290,14 @@ namespace eCAL
 	TypeInfo::AnalyzeType(members);
     }
 
-    void CDeserializer::Deserialize(void *message, const void *serialized_data, size_t /* size */)
+    void CDeserializer::Deserialize(void *message, const void *serialized_data, size_t size)
     {
       auto serialized_bytes = static_cast<const char *>(serialized_data);
       auto message_bytes = static_cast<char *>(message);
+      if (size >= 4 && serialized_bytes[0] == 0x00 && serialized_bytes[1] == 0x01 && serialized_bytes[2] == 0x00 && serialized_bytes[3] == 0x00)
+      {
+        serialized_bytes += 4;
+      }
       DeserializeMessage(&serialized_bytes, members_, message_bytes);
     }
 

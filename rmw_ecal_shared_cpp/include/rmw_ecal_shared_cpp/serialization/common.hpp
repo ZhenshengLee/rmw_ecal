@@ -21,7 +21,7 @@
 #include <rosidl_typesupport_introspection_cpp/service_introspection.hpp>
 #include <rosidl_typesupport_introspection_c/service_introspection.h>
 
-using array_size_t = uint64_t;
+using array_size_t = uint32_t;
 //Represents arbitrary ros message type, used for consistency
 //of serialization/deserialization template functions.
 struct ros_message_t;

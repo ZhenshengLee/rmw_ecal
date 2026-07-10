@@ -56,9 +56,9 @@ namespace eCAL
     {
       auto str = reinterpret_cast<const std::string *>(data);
       auto str_data = str->c_str();
-      auto str_size = str->size();
-
-      SerializeArraySize(*str, serialized_data);
+      auto str_size = str->size() + 1; // 包含 null 终止符
+ 
+      SerializeSingle<array_size_t>(static_cast<array_size_t>(str_size), serialized_data);
       SerializeArray<char>(str_data, str_size, serialized_data);
     }
 
@@ -295,8 +295,11 @@ namespace eCAL
 
     const std::string CppSerializer::Serialize(const void *data)
     {
-      //it might be good idea to pre estimate and reserve data size in our payload vector
       std::string serialized_data;
+      serialized_data.push_back(0x00);
+      serialized_data.push_back(0x01);
+      serialized_data.push_back(0x00);
+      serialized_data.push_back(0x00);
       SerializeMessage(static_cast<const char *>(data), members_, serialized_data);
       return serialized_data;
     }
