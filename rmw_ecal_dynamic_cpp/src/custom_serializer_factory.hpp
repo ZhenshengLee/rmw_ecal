@@ -51,7 +51,7 @@ namespace eCAL
       return new CDeserializer(members);
     }
 
-    Serializer *CreateSerializer(const rosidl_message_type_support_t *type_support)
+    inline Serializer *CreateSerializer(const rosidl_message_type_support_t *type_support)
     {
       auto ts = get_message_typesupport_handle(type_support, rosidl_typesupport_introspection_cpp::typesupport_identifier);
       if (ts != nullptr)
@@ -71,7 +71,7 @@ namespace eCAL
       throw std::runtime_error("Unsupported type support.");
     }
 
-    Deserializer *CreateDeserializer(const rosidl_message_type_support_t *type_support)
+    inline Deserializer *CreateDeserializer(const rosidl_message_type_support_t *type_support)
     {
       auto ts = get_message_typesupport_handle(type_support, rosidl_typesupport_introspection_cpp::typesupport_identifier);
       if (ts != nullptr)
@@ -93,6 +93,7 @@ namespace eCAL
 
     class CustomSerializerFactory : public SerializerFactory
     {
+    public:
       Serializer *CreateSerializer(const rosidl_message_type_support_t *type_support) const override
       {
         auto ts = get_message_typesupport_handle(type_support, rosidl_typesupport_introspection_cpp::typesupport_identifier);

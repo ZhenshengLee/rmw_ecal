@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#pragma once
+
 #include <rmw_ecal_shared_cpp/serializer_factory.hpp>
 
 #include "serialization/proto_serializer.hpp"
 #include "serialization/proto_deserializer.hpp"
 
 #include "common.hpp"
+
+#include "../../rmw_ecal_dynamic_cpp/src/custom_serializer_factory.hpp"
 
 namespace eCAL
 {
@@ -27,12 +31,22 @@ namespace eCAL
     {
       Serializer *CreateSerializer(const rosidl_message_type_support_t *type_support) const override
       {
-        return new ProtoSerializer{GetTypeSupport(type_support)};
+        auto *proto_ts = GetTypeSupport(type_support);
+        if (proto_ts != nullptr)
+        {
+          return new ProtoSerializer{proto_ts};
+        }
+        return CustomSerializerFactory{}.CreateSerializer(type_support);
       }
 
       Deserializer *CreateDeserializer(const rosidl_message_type_support_t *type_support) const override
       {
-        return new ProtoDeserializer{GetTypeSupport(type_support)};
+        auto *proto_ts = GetTypeSupport(type_support);
+        if (proto_ts != nullptr)
+        {
+          return new ProtoDeserializer{proto_ts};
+        }
+        return CustomSerializerFactory{}.CreateDeserializer(type_support);
       }
     };
   } // namespace rmw
